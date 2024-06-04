@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/bosserun/static/css/main.b5d75adc.css",
-    "main.js": "/bosserun/static/js/main.22ad0940.js",
-    "static/js/453.cacf941b.chunk.js": "/bosserun/static/js/453.cacf941b.chunk.js",
+    "main.css": "/bosserun/static/css/main.4674800d.css",
+    "main.js": "/bosserun/static/js/main.33e81c83.js",
+    "static/js/453.ccd81a15.chunk.js": "/bosserun/static/js/453.ccd81a15.chunk.js",
     "index.html": "/bosserun/index.html",
-    "main.b5d75adc.css.map": "/bosserun/static/css/main.b5d75adc.css.map",
-    "main.22ad0940.js.map": "/bosserun/static/js/main.22ad0940.js.map",
-    "453.cacf941b.chunk.js.map": "/bosserun/static/js/453.cacf941b.chunk.js.map"
+    "main.4674800d.css.map": "/bosserun/static/css/main.4674800d.css.map",
+    "main.33e81c83.js.map": "/bosserun/static/js/main.33e81c83.js.map",
+    "453.ccd81a15.chunk.js.map": "/bosserun/static/js/453.ccd81a15.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b5d75adc.css",
-    "static/js/main.22ad0940.js"
+    "static/css/main.4674800d.css",
+    "static/js/main.33e81c83.js"
   ]
 }

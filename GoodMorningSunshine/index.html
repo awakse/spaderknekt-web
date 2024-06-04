@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Good Morning Sunshine</title>
+	<title>Morning Friend</title>
 	<style>
 		@font-face {
 			font-family: Organo;
@@ -38,10 +38,10 @@
 			height: 100vh;
 			margin: 0;
 			padding: 0;
-			-webkit-transition: background-color 20s ease-out;
-			-moz-transition: background-color 20s ease-out;
-			-o-transition: background-color 20s ease-out;
-			transition: background-color 20s ease-out;
+			-webkit-transition: background-color 15s ease-out;
+			-moz-transition: background-color 15s ease-out;
+			-o-transition: background-color 15s ease-out;
+			transition: background-color 15s ease-out;
 		}
 		
 		table {
@@ -190,9 +190,17 @@
 
 		// Update the time every second
 		function startTimer() {
-			setInterval(() => {
+			if(validateSelectedTimes()) {
+				setInterval(() => {
 				showTimeDisplay();
 			}, 1000);
+			} else {
+				alert('Wake up time, bed time and sleep time must be in ascending order.');
+			}
+		}
+
+		function validateSelectedTimes() {
+			return getWakeUpTime() < getBedTime() && getBedTime() < getSleepTime();
 		}
 		
 		function init() {
@@ -214,6 +222,36 @@
 				document.getElementById("sleep-mins").innerHTML += "<option value=\"" + i + "\">" + zeroPaddedMin + "</option>";
 			}
 		}
+
+		function getWakeUpTime() {
+			let wakeUpTime = new Date();
+			const morningHours = document.getElementById("morning-hours").value;
+			const morningMins  = document.getElementById("morning-mins").value;
+			wakeUpTime.setHours(morningHours);
+			wakeUpTime.setMinutes(morningMins);
+			wakeUpTime.setSeconds(0);
+			return wakeUpTime;
+		}
+
+		function getBedTime() {
+			let bedTime = new Date();
+			const bedtimeHours = document.getElementById("bedtime-hours").value;
+			const bedtimeMins  = document.getElementById("bedtime-mins").value;
+			bedTime.setHours(bedtimeHours);
+			bedTime.setMinutes(bedtimeMins);
+			bedTime.setSeconds(0);
+			return bedTime;
+		}
+
+		function getSleepTime() {
+			let sleepTime = new Date();
+			const sleepHours = document.getElementById("sleep-hours").value;
+			const sleepMins  = document.getElementById("sleep-mins").value;
+			sleepTime.setHours(sleepHours);
+			sleepTime.setMinutes(sleepMins);
+			sleepTime.setSeconds(0);
+			return sleepTime;
+		}
 		
 		function showTimeDisplay() {
 			document.getElementById("current-time").innerHTML = getCurrentTime();
@@ -222,47 +260,29 @@
 			document.getElementById("time-selector").style.display = "none"
 			document.getElementById("time-display").style.display = "block"
 			
-			const morningHours = document.getElementById("morning-hours").value;
-			const morningMins  = document.getElementById("morning-mins").value;
+			const now 		 = new Date();
+			const wakeUpTime = getWakeUpTime();
+			const bedTime    = getBedTime();
+			const sleepTime  = getSleepTime();
 			
-			const bedtimeHours = document.getElementById("bedtime-hours").value;
-			const bedtimeMins  = document.getElementById("bedtime-mins").value;
-			
-			const sleepHours = document.getElementById("sleep-hours").value;
-			const sleepMins  = document.getElementById("sleep-mins").value;
-			
-			const date = new Date();
-		
-			const morningDate = new Date();
-			morningDate.setHours(morningHours);
-			morningDate.setMinutes(morningMins);
-			
-			const bedtimeDate = new Date();
-			bedtimeDate.setHours(bedtimeHours);
-			bedtimeDate.setMinutes(bedtimeMins);
-			
-			const sleepDate = new Date();
-			sleepDate.setHours(sleepHours);
-			sleepDate.setMinutes(sleepMins);
-			
-			if(date < morningDate || date >= sleepDate) {
-				// It's sleep
-				document.body.style.backgroundColor="darkblue";
-				document.getElementById("sleepImage").style.display = "block";
-				document.getElementById("bedtimeImage").style.display = "none";
-				document.getElementById("morningImage").style.display = "none";
-			} else if(date >= morningDate && date < bedtimeDate) {
-				// It's morning
-				document.body.style.backgroundColor="lightgreen";
-				document.getElementById("sleepImage").style.display = "none";
-				document.getElementById("bedtimeImage").style.display = "none";
-				document.getElementById("morningImage").style.display = "block";
-			} else {
+			if(now > bedTime && now < sleepTime) {
 				// It's bedtime
 				document.body.style.backgroundColor="cornflowerblue";
 				document.getElementById("sleepImage").style.display = "none";
 				document.getElementById("bedtimeImage").style.display = "block";
 				document.getElementById("morningImage").style.display = "none";
+			} else if(now >= sleepTime || now < wakeUpTime) {
+				// It's sleep
+				document.body.style.backgroundColor="darkblue";
+				document.getElementById("sleepImage").style.display = "block";
+				document.getElementById("bedtimeImage").style.display = "none";
+				document.getElementById("morningImage").style.display = "none";
+			} else {
+				// It's morning
+				document.body.style.backgroundColor="lightgreen";
+				document.getElementById("sleepImage").style.display = "none";
+				document.getElementById("bedtimeImage").style.display = "none";
+				document.getElementById("morningImage").style.display = "block";
 			}
 		}
 	</script>

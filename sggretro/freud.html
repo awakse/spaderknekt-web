@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Freud-quiz — grupindelning</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:24px;background:#f7fafc;color:#0f172a}
+    .card{background:white;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,42,.08);padding:18px;margin-bottom:16px}
+    h1{font-size:20px;margin:0 0 8px}
+    label{display:block;margin:10px 0}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn-primary{background:#2563eb;color:white}
+    .btn-ghost{background:transparent;border:1px solid #e2e8f0}
+    input[type=text]{padding:8px;border-radius:8px;border:1px solid #e2e8f0;width:100%}
+    .small{font-size:13px;color:#475569}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;text-align:left;border-bottom:1px solid #eef2f7}
+    .group{display:inline-block;padding:6px 8px;border-radius:8px;margin-right:8px}
+    .det{background:#ffe4e6;color:#9f1239}
+    .ego{background:#e6f4ff;color:#075985}
+    .sup{background:#eef2ff;color:#3730a3}
+    .result{font-weight:700}
+    footer{font-size:12px;color:#64748b;margin-top:12px}
+    .question{display:none;margin-bottom:12px}
+    .question.active{display:block;}
+  </style>
+</head>
+<body>
+  <img src="https://www.spaderknekt.se/sggretro/freud.svg" style="display:none" alt />
+  <div class="card">
+    <h1>Freud-quiz — stegvis</h1>
+    <p class="small">Svara på varje fråga, så visas nästa. När alla frågor är besvarade kan du spara poängen.</p>
+  </div>
+
+  <div class="card" id="quizCard">
+    <label>Namnet på personen:
+      <input type="text" id="personName" placeholder="Skriv namn..." />
+    </label>
+
+    <form id="quizForm">
+      <div class="question active" data-index="0">
+        <strong>1) Om du får en stark impuls att göra något roligt men opraktiskt — följer du känslan eller tänker du efter först?</strong>
+        <label><input type="radio" name="q1" value="id:2" required/> Jag följer impulsen direkt — livet är till för att levas!</label>
+        <label><input type="radio" name="q1" value="id:1,ego:1"/> Jag tar oftast känslan men funderar lite först.</label>
+        <label><input type="radio" name="q1" value="ego:2"/> Jag tänker efter och planerar — konsekvenser först.</label>
+        <label><input type="radio" name="q1" value="sup:2"/> Jag undviker om det strider mot mina principer.</label>
+      </div>
+
+      <div class="question" data-index="1">
+        <strong>2) När du gör något du vet att du egentligen inte borde — hur reagerar du efteråt?</strong>
+        <label><input type="radio" name="q2" value="id:1" required/> Jag struntar i det och går vidare.</label>
+        <label><input type="radio" name="q2" value="ego:1"/> Jag försöker förklara eller rättfärdiga det för mig själv.</label>
+        <label><input type="radio" name="q2" value="ego:1,sup:1"/> Jag tänker igenom varför och försöker göra bot.</label>
+        <label><input type="radio" name="q2" value="sup:2"/> Jag känner skuld och skärper mig — moral och regler styr mig.</label>
+      </div>
+
+      <div class="question" data-index="2">
+        <strong>3) Tror du att dina drömmar säger något om dina innersta önskningar?</strong>
+        <label><input type="radio" name="q3" value="id:2" required/> Ja, ofta — drömmar visar vad jag innerst inne vill.</label>
+        <label><input type="radio" name="q3" value="ego:1"/> Ibland, men jag ser också dem som hjärnans sätt att bearbeta dagen.</label>
+        <label><input type="radio" name="q3" value="sup:1"/> Nej, jag tycker inte drömmar bör styra mitt beteende.</label>
+        <label><input type="radio" name="q3" value="ego:1,sup:1"/> Kanske — jag reflekterar men låter det inte bestämma mig.</label>
+      </div>
+
+      <div class="question" data-index="3">
+        <strong>4) Hur hanterar du konflikt mellan vad du vill göra och vad du borde göra?</strong>
+        <label><input type="radio" name="q4" value="id:2" required/> Jag brukar göra det jag vill — följ känslan.</label>
+        <label><input type="radio" name="q4" value="ego:2"/> Jag försöker hitta en praktisk kompromiss.</label>
+        <label><input type="radio" name="q4" value="sup:2"/> Jag gör det jag bör — plikten väger tyngst.</label>
+        <label><input type="radio" name="q4" value="ego:1,id:1"/> Jag väger för- och nackdelar men kan fångas av känslor.</label>
+      </div>
+
+      <div class="question" data-index="4">
+        <strong>5) När du hamnar i en jobbig situation, brukar du:</strong>
+        <label><input type="radio" name="q5" value="ego:2" required/> Ta tag i problemet direkt och lösa det.</label>
+        <label><input type="radio" name="q5" value="id:1"/> Förneka det eller skjuta upp det tills det känns bättre.</label>
+        <label><input type="radio" name="q5" value="ego:1, sup:1"/> Förklara det rationellt eller be om råd.</label>
+        <label><input type="radio" name="q5" value="ego:1"/> Använda humor för att lätta upp stämningen.</label>
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" id="submitBtn" type="submit" style="display:none">Spara poäng</button>
+        <button class="btn btn-ghost" id="resetBtn" type="button">Rensa</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Resultat och gruppindelning</h2>
+    <table id="participantsTable">
+      <thead><tr><th>Namn</th><th>Detet</th><th>Jaget</th><th>Överjaget</th><th>Dominant</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const participants=[];
+    function parseValue(val){const obj={id:0,ego:0,sup:0};if(!val)return obj;val.split(',').forEach(part=>{const[k,v]=part.split(':');if(k.trim()==='id')obj.id+=Number(v);if(k.trim()==='ego')obj.ego+=Number(v);if(k.trim()==='sup')obj.sup+=Number(v);});return obj;}
+    function getDominant(scores){const m=Math.max(scores.id,scores.ego,scores.sup);const dom=[];if(scores.id===m)dom.push('Detet');if(scores.ego===m)dom.push('Jaget');if(scores.sup===m)dom.push('Överjaget');return dom.join(' & ');}
+    function addParticipant(name,scores){const dominant=getDominant(scores);participants.push({name,scores,dominant});renderParticipants();}
+    function renderParticipants(){const tbody=document.querySelector('#participantsTable tbody');tbody.innerHTML='';participants.forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${p.name}</td><td>${p.scores.id}</td><td>${p.scores.ego}</td><td>${p.scores.sup}</td><td>${p.dominant}</td>`;tbody.appendChild(tr);});}
+
+    const questions=document.querySelectorAll('.question');
+    questions.forEach((q,i)=>{
+      q.querySelectorAll('input[type=radio]').forEach(r=>{
+        r.addEventListener('change',()=>{
+          q.classList.remove('active');
+          if(i+1<questions.length)questions[i+1].classList.add('active');
+          else document.getElementById('submitBtn').style.display='inline-block';
+        });
+      });
+    });
+
+    document.getElementById('quizForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const name=document.getElementById('personName').value||'Namnlös';
+      const form=e.target;
+      const qKeys=['q1','q2','q3','q4','q5'];
+      const total={id:0,ego:0,sup:0};
+      qKeys.forEach(k=>{const val=form.elements[k].value;const p=parseValue(val);total.id+=p.id;total.ego+=p.ego;total.sup+=p.sup;});
+      addParticipant(name,total);
+      form.reset();questions.forEach((q,i)=>{q.classList.toggle('active',i===0)});document.getElementById('submitBtn').style.display='none';
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      document.getElementById('quizForm').reset();questions.forEach((q,i)=>{q.classList.toggle('active',i===0)});document.getElementById('submitBtn').style.display='none';
+    });
+  </script>
+</body>
+</html>

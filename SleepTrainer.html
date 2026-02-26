@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sleep Trainer Clock</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #111;
+    color: white;
+    margin: 0;
+    padding: 20px;
+  }
+
+  #clock {
+    font-size: 4rem;
+    margin-top: 20px;
+  }
+
+  #modeDisplay {
+    font-size: 2rem;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .night { background: #1e3a8a; }
+  .wake { background: #f59e0b; }
+  .nap { background: #10b981; }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 5px;
+  }
+
+  #parentPanel {
+    display: none;
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  input[type="time"] {
+    font-size: 1rem;
+    padding: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>💤 Sleep Trainer Clock</h1>
+
+<div id="clock">--:--</div>
+<div id="modeDisplay">Loading...</div>
+
+<button onclick="enterParentMode()">Parent Mode</button>
+
+<div id="parentPanel">
+  <h2>🔒 Parent Settings</h2>
+
+  <div>
+    Night start:
+    <input type="time" id="nightStart">
+  </div>
+
+  <div>
+    Wake time:
+    <input type="time" id="wakeTime">
+  </div>
+
+  <div>
+    Nap start:
+    <input type="time" id="napStart">
+  </div>
+
+  <div>
+    Nap end:
+    <input type="time" id="napEnd">
+  </div>
+
+  <br>
+  <button onclick="saveSettings()">Save</button>
+  <button onclick="exitParentMode()">Close</button>
+</div>
+
+<script>
+const DEFAULT_SETTINGS = {
+  nightStart: "19:00",
+  wakeTime: "07:00",
+  napStart: "12:30",
+  napEnd: "14:00",
+  pin: "1234"
+};
+
+let settings = loadSettings();
+
+function loadSettings() {
+  const saved = localStorage.getItem("sleepTrainerSettings");
+  return saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
+}
+
+function saveSettings() {
+  settings.nightStart = document.getElementById("nightStart").value;
+  settings.wakeTime = document.getElementById("wakeTime").value;
+  settings.napStart = document.getElementById("napStart").value;
+  settings.napEnd = document.getElementById("napEnd").value;
+
+  localStorage.setItem("sleepTrainerSettings", JSON.stringify(settings));
+  alert("Saved!");
+}
+
+function enterParentMode() {
+  const pin = prompt("Enter parent PIN:");
+  if (pin === settings.pin) {
+    document.getElementById("parentPanel").style.display = "block";
+    populateInputs();
+  } else {
+    alert("Wrong PIN");
+  }
+}
+
+function exitParentMode() {
+  document.getElementById("parentPanel").style.display = "none";
+}
+
+function populateInputs() {
+  document.getElementById("nightStart").value = settings.nightStart;
+  document.getElementById("wakeTime").value = settings.wakeTime;
+  document.getElementById("napStart").value = settings.napStart;
+  document.getElementById("napEnd").value = settings.napEnd;
+}
+
+function timeToMinutes(t) {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function getCurrentMode(nowMinutes) {
+  const night = timeToMinutes(settings.nightStart);
+  const wake = timeToMinutes(settings.wakeTime);
+  const napStart = timeToMinutes(settings.napStart);
+  const napEnd = timeToMinutes(settings.napEnd);
+
+  // Night mode (handles crossing midnight)
+  if (night > wake) {
+    if (nowMinutes >= night || nowMinutes < wake) return "night";
+  } else {
+    if (nowMinutes >= night && nowMinutes < wake) return "night";
+  }
+
+  if (nowMinutes >= napStart && nowMinutes < napEnd) return "nap";
+
+  return "wake";
+}
+
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  document.getElementById("clock").textContent = timeStr;
+
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  const mode = getCurrentMode(minutes);
+
+  const display = document.getElementById("modeDisplay");
+  display.className = "";
+  
+  if (mode === "night") {
+    display.textContent = "🌙 Night Time — Stay in Bed";
+    display.classList.add("night");
+  } else if (mode === "nap") {
+    display.textContent = "😴 Nap Time";
+    display.classList.add("nap");
+  } else {
+    display.textContent = "☀️ OK to Wake";
+    display.classList.add("wake");
+  }
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+</html>
